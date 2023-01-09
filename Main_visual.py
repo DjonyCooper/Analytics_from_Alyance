@@ -1,7 +1,7 @@
-from PyQt5.QtWidgets import (QLineEdit, QPushButton, QLabel, QWidget, QApplication, QGridLayout,
-                             QFileDialog, QMessageBox)
+from PyQt5.QtWidgets import (QLineEdit, QPushButton, QLabel, QWidget, QApplication, QFrame,
+                             QFileDialog, QMessageBox, QVBoxLayout, QHBoxLayout)
 from PyQt5.QtGui import QFont, QPixmap, QIcon
-from PyQt5.QtCore import QDateTime
+from PyQt5.QtCore import QDateTime, Qt
 import openpyxl
 from openpyxl import load_workbook
 import time
@@ -11,111 +11,138 @@ class Main(QWidget):
     def __init__(self):
         super(Main, self).__init__()
         self.setWindowTitle("Тестовая программа: Аналитика v1.0")
-        self.main_maket = QGridLayout()
-        self.main_maket.addWidget(self.hello_label())
-        self.main_maket.addWidget(self.book_ost_label(), 1, 0)
-        self.main_maket.addWidget(self.book_ost_line_edit(), 1, 1)
-        self.main_maket.addWidget(self.button_browseFiles_book_ost(), 1, 2)
-        self.main_maket.addWidget(self.book_label(), 2, 0)
-        self.main_maket.addWidget(self.book_line_edit(), 2, 1)
-        self.main_maket.addWidget(self.button_browseFiles_book(), 2, 2)
-        self.main_maket.addWidget(self.book_price_label(), 3, 0)
-        self.main_maket.addWidget(self.book_price_line_edit(), 3, 1)
-        self.main_maket.addWidget(self.button_browseFiles_book_price(), 3, 2)
-        self.main_maket.addWidget(self.book_const_label(), 4, 0)
-        self.main_maket.addWidget(self.book_const_line_edit(), 4, 1)
-        self.main_maket.addWidget(self.button_browseFiles_book_const(), 4, 2)
-        self.main_maket.addWidget(self.b_create(), 5, 0)
-        self.main_maket.addWidget(self.b_close(), 5, 1)
-        self.setLayout(self.main_maket)
+        self.setMinimumSize(700, 300)
+        vbox = QVBoxLayout()
+        hbox_line_1 = QHBoxLayout()
+        hbox_line_2 = QHBoxLayout()
+        hbox_line_3 = QHBoxLayout()
+        hbox_line_4 = QHBoxLayout()
+        hbox_line_5 = QHBoxLayout()
+        hbox_ok_close = QHBoxLayout()
+        vbox.addWidget(self.hello_label())
+        vbox.addStretch(0)
+        vbox.addWidget(self.horizontal_line())
+        hbox_line_1.addWidget(self.book_label())
+        hbox_line_1.addWidget(self.book_line_edit())
+        vbox.addLayout(hbox_line_1)
+        hbox_line_2.addWidget(self.book_ost_label())
+        hbox_line_2.addWidget(self.book_ost_line_edit())
+        vbox.addLayout(hbox_line_2)
+        hbox_line_3.addWidget(self.book_price_label())
+        hbox_line_3.addWidget(self.book_price_line_edit())
+        vbox.addLayout(hbox_line_3)
+        hbox_line_4.addWidget(self.book_const_label())
+        hbox_line_4.addWidget(self.book_const_line_edit())
+        vbox.addLayout(hbox_line_4)
+        vbox.addWidget(self.horizontal_line())
+        hbox_line_5.addWidget(self.book_file_save_label())
+        hbox_line_5.addWidget(self.book_file_save_line_edit())
+        vbox.addLayout(hbox_line_5)
+        vbox.setSpacing(10)
+        vbox.addWidget(self.horizontal_line())
+        hbox_ok_close.addWidget(self.b_create())
+        hbox_ok_close.addWidget(self.b_close())
+        vbox.addLayout(hbox_ok_close)
+
+        self.setLayout(vbox)
+
+    def horizontal_line(self):
+        self.decor_line = QFrame()
+        self.decor_line.setFrameShape(QFrame.HLine)
+        self.decor_line.setFrameShadow(QFrame.Sunken)
+        return self.decor_line
 
     def hello_label(self):
-        hello_label = QLabel("Здравствуйте, ув. пользователь!")
+        hello_label = QLabel("Аналитика v1.0")
+        hello_label.setFont(QFont('Century Gothic', 20))
+        hello_label.setAlignment(Qt.AlignCenter)
         return hello_label
 
     def book_label(self):
         book_label = QLabel("Выберите файл, содержащий остатки из 1С:")
+        book_label.setMinimumSize(300, 10)
         return book_label
 
     def book_line_edit(self):
         self.book_line_edit = QLineEdit(self)
         self.book_line_edit.setMinimumSize(30, 30)
-        serchOtherIcon = self.book_line_edit.addAction(QIcon("search.png"), QLineEdit.TrailingPosition)
-        serchOtherIcon.triggered.connect(self.browse_files_book)
+        serch_book_icon = self.book_line_edit.addAction(QIcon("search.png"), QLineEdit.TrailingPosition)
+        serch_book_icon.triggered.connect(self.browse_files_book)
         return self.book_line_edit
 
     def book_ost_label(self):
         book_ost_label = QLabel("Выберите файл, содержащий остатки из базы:")
+        book_ost_label.setMinimumSize(300, 10)
         return book_ost_label
 
     def book_ost_line_edit(self):
         self.book_ost_line_edit = QLineEdit(self)
         self.book_ost_line_edit.setMinimumSize(30, 30)
+        serch_book_ost_icon = self.book_ost_line_edit.addAction(QIcon("search.png"), QLineEdit.TrailingPosition)
+        serch_book_ost_icon.triggered.connect(self.browse_files_book_ost)
         return self.book_ost_line_edit
 
     def book_price_label(self):
         book_price = QLabel("Выберите файл, содержащий прайс:")
+        book_price.setMinimumSize(300, 10)
         return book_price
 
     def book_price_line_edit(self):
         self.book_price_line_edit = QLineEdit(self)
         self.book_price_line_edit.setMinimumSize(30, 30)
+        serch_book_price_icon = self.book_price_line_edit.addAction(QIcon("search.png"), QLineEdit.TrailingPosition)
+        serch_book_price_icon.triggered.connect(self.browse_files_book_price)
         return self.book_price_line_edit
 
     def book_const_label(self):
         book_const = QLabel("Выберите файл, содержащий константу:")
+        book_const.setMinimumSize(300, 10)
         return book_const
 
     def book_const_line_edit(self):
         self.book_const_line_edit = QLineEdit(self)
         self.book_const_line_edit.setMinimumSize(30, 30)
+        serch_book_const_icon = self.book_const_line_edit.addAction(QIcon("search.png"), QLineEdit.TrailingPosition)
+        serch_book_const_icon.triggered.connect(self.browse_files_book_const)
         return self.book_const_line_edit
 
-    def button_browseFiles_book(self):
-        button_browseFiles_book = QPushButton("Обзор")
-        button_browseFiles_book.setMinimumSize(30, 30)
-        button_browseFiles_book.clicked.connect(self.browse_files_book)
-        return button_browseFiles_book
+    def book_file_save_label(self):
+        book_file_save_label = QLabel("Выберите папку, для сохранения новых файлов:")
+        book_file_save_label.setMinimumSize(300, 10)
+        return book_file_save_label
+
+    def book_file_save_line_edit(self):
+        self.book_file_save_line_edit = QLineEdit(self)
+        self.book_file_save_line_edit.setMinimumSize(30, 30)
+        serch_book_ost_icon = self.book_file_save_line_edit.addAction(QIcon("save.png"), QLineEdit.TrailingPosition)
+        serch_book_ost_icon.triggered.connect(self.browse_files_book_file_save)
+        return self.book_file_save_line_edit
 
     def browse_files_book(self):
-        browse_files_book = QFileDialog.getOpenFileName(self, 'Open file', 'C:\Program Files', 'xlsx files (*.xlsx)')
+        browse_files_book = QFileDialog.getOpenFileName(self, 'Выберите файл, содержащий остатки из 1С...', 'C:\Program Files', 'xlsx files (*.xlsx)')
         self.book_line_edit.setText(browse_files_book[0])
 
-    def button_browseFiles_book_ost(self):
-        button_browseFiles_book_ost = QPushButton("Обзор")
-        button_browseFiles_book_ost.setMinimumSize(30, 30)
-        button_browseFiles_book_ost.clicked.connect(self.browse_files_book_ost)
-        return button_browseFiles_book_ost
-
     def browse_files_book_ost(self):
-        browse_files_book_ost = QFileDialog.getOpenFileName(self, 'Open file', 'C:\Program Files', 'xlsx files (*.xlsx)')
+        browse_files_book_ost = QFileDialog.getOpenFileName(self, 'Выберите файл, содержащий остатки из базы...', 'C:\Program Files', 'xlsx files (*.xlsx)')
         self.book_ost_line_edit.setText(browse_files_book_ost[0])
 
-    def button_browseFiles_book_price(self):
-        button_browseFiles_book_price = QPushButton("Обзор")
-        button_browseFiles_book_price.setMinimumSize(30, 30)
-        button_browseFiles_book_price.clicked.connect(self.browse_files_book_price)
-        return button_browseFiles_book_price
-
     def browse_files_book_price(self):
-        browse_files_book_price = QFileDialog.getOpenFileName(self, 'Open file', 'C:\Program Files', 'xlsx files (*.xlsx)')
+        browse_files_book_price = QFileDialog.getOpenFileName(self, 'Выберите файл, содержащий прайс...', 'C:\Program Files', 'xlsx files (*.xlsx)')
         self.book_price_line_edit.setText(browse_files_book_price[0])
 
-    def button_browseFiles_book_const(self):
-        button_browseFiles_book_const = QPushButton("Обзор")
-        button_browseFiles_book_const.setMinimumSize(30, 30)
-        button_browseFiles_book_const.clicked.connect(self.browse_files_book_const)
-        return button_browseFiles_book_const
-
     def browse_files_book_const(self):
-        browse_files_book_const = QFileDialog.getOpenFileName(self, 'Open file', 'C:\Program Files', 'xlsx files (*.xlsx)')
+        browse_files_book_const = QFileDialog.getOpenFileName(self, 'Выберите файл, содержащий константу... ', 'C:\Program Files', 'xlsx files (*.xlsx)')
         self.book_const_line_edit.setText(browse_files_book_const[0])
+
+    def browse_files_book_file_save(self):
+        browse_files_book_file_save = QFileDialog.getExistingDirectory(self, "Выбор папки для сохранения...")
+        self.book_file_save_line_edit.setText(browse_files_book_file_save)
 
     def b_create(self):
         b_create = QPushButton("Выполнить обработку • Enter", self)
         b_create.setMinimumSize(10, 40)
         b_create.setFont(QFont('Century Gothic', 8, QFont.Normal))
-        b_create.setToolTip('Нажмите, для добавления нового ярлыка')
+        b_create.setToolTip('Нажмите, для запуска программы')
         b_create.setStyleSheet("""
                                                    QPushButton:hover { background-color: green;
                                                    border-radius: 10px;
@@ -136,10 +163,10 @@ class Main(QWidget):
 
     def b_close(self):
         b_close = QPushButton("Закрыть • Esc", self)
-        b_close.setMinimumSize(10, 40)
+        b_close.setMinimumSize(50, 40)
         b_close.setFont(QFont('Century Gothic', 8, QFont.Normal))
         b_close.setShortcut('Esc')
-        b_close.setToolTip('Нажмите, чтобы отменить изменения и выйти')
+        b_close.setToolTip('Нажмите, чтобы выйти')
         b_close.setStyleSheet("""
                                            QPushButton:hover { background-color: rgba(139, 0, 0);
                                                                border-radius: 10px;
@@ -162,7 +189,7 @@ class Main(QWidget):
         self.close()
 
     def start_analytics(self):
-        self.base_line_edit = [self.book_line_edit, self.book_price_line_edit, self.book_const_line_edit, self.book_ost_line_edit]
+        self.base_line_edit = [self.book_line_edit, self.book_price_line_edit, self.book_const_line_edit, self.book_ost_line_edit, self.book_file_save_line_edit]
         for line_edit in self.base_line_edit:
             if len(line_edit.text()) == 0:
                 self.showMessageBox('Внимание!',
@@ -182,7 +209,11 @@ class Main(QWidget):
         msgBox.setStandardButtons(QMessageBox.Ok)
         msgBox.exec_()
 
-
+    def image_and(self):
+        label = QLabel(self)
+        pixmap = QPixmap('line.png')
+        label.setPixmap(pixmap)
+        return label
 
     def displayTime(self):
         self.b_create().setText(QDateTime.currentDateTime().toString())

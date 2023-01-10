@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import (QLineEdit, QPushButton, QLabel, QWidget, QApplication, QFrame,
-                             QFileDialog, QMessageBox, QVBoxLayout, QHBoxLayout)
+                             QFileDialog, QMessageBox, QVBoxLayout, QHBoxLayout, QStyle)
 from PyQt5.QtGui import QFont, QPixmap, QIcon
 from PyQt5.QtCore import QDateTime, Qt
 import openpyxl
@@ -12,6 +12,7 @@ class Main(QWidget):
         super(Main, self).__init__()
         self.setWindowTitle("Тестовая программа: Аналитика v1.0")
         self.setMinimumSize(700, 300)
+        self.setWindowIcon(self.style().standardIcon(QStyle.SP_FileDialogStart))
         vbox = QVBoxLayout()
         hbox_line_1 = QHBoxLayout()
         hbox_line_2 = QHBoxLayout()
@@ -66,7 +67,7 @@ class Main(QWidget):
     def book_line_edit(self):
         self.book_line_edit = QLineEdit(self)
         self.book_line_edit.setMinimumSize(30, 30)
-        serch_book_icon = self.book_line_edit.addAction(QIcon("search.png"), QLineEdit.TrailingPosition)
+        serch_book_icon = self.book_line_edit.addAction(self.style().standardIcon(QStyle.SP_FileDialogContentsView), QLineEdit.TrailingPosition)
         serch_book_icon.triggered.connect(self.browse_files_book)
         return self.book_line_edit
 
@@ -78,7 +79,7 @@ class Main(QWidget):
     def book_ost_line_edit(self):
         self.book_ost_line_edit = QLineEdit(self)
         self.book_ost_line_edit.setMinimumSize(30, 30)
-        serch_book_ost_icon = self.book_ost_line_edit.addAction(QIcon("search.png"), QLineEdit.TrailingPosition)
+        serch_book_ost_icon = self.book_ost_line_edit.addAction(self.style().standardIcon(QStyle.SP_FileDialogContentsView), QLineEdit.TrailingPosition)
         serch_book_ost_icon.triggered.connect(self.browse_files_book_ost)
         return self.book_ost_line_edit
 
@@ -90,7 +91,7 @@ class Main(QWidget):
     def book_price_line_edit(self):
         self.book_price_line_edit = QLineEdit(self)
         self.book_price_line_edit.setMinimumSize(30, 30)
-        serch_book_price_icon = self.book_price_line_edit.addAction(QIcon("search.png"), QLineEdit.TrailingPosition)
+        serch_book_price_icon = self.book_price_line_edit.addAction(self.style().standardIcon(QStyle.SP_FileDialogContentsView), QLineEdit.TrailingPosition)
         serch_book_price_icon.triggered.connect(self.browse_files_book_price)
         return self.book_price_line_edit
 
@@ -102,7 +103,7 @@ class Main(QWidget):
     def book_const_line_edit(self):
         self.book_const_line_edit = QLineEdit(self)
         self.book_const_line_edit.setMinimumSize(30, 30)
-        serch_book_const_icon = self.book_const_line_edit.addAction(QIcon("search.png"), QLineEdit.TrailingPosition)
+        serch_book_const_icon = self.book_const_line_edit.addAction(self.style().standardIcon(QStyle.SP_FileDialogContentsView), QLineEdit.TrailingPosition)
         serch_book_const_icon.triggered.connect(self.browse_files_book_const)
         return self.book_const_line_edit
 
@@ -114,7 +115,7 @@ class Main(QWidget):
     def book_file_save_line_edit(self):
         self.book_file_save_line_edit = QLineEdit(self)
         self.book_file_save_line_edit.setMinimumSize(30, 30)
-        serch_book_ost_icon = self.book_file_save_line_edit.addAction(QIcon("save.png"), QLineEdit.TrailingPosition)
+        serch_book_ost_icon = self.book_file_save_line_edit.addAction(self.style().standardIcon(QStyle.SP_DialogSaveButton), QLineEdit.TrailingPosition)
         serch_book_ost_icon.triggered.connect(self.browse_files_book_file_save)
         return self.book_file_save_line_edit
 
@@ -204,7 +205,9 @@ class Main(QWidget):
     def showMessageBox(self, title, message):
         msgBox = QMessageBox()
         msgBox.setWindowTitle(title)
-        msgBox.setIconPixmap(QPixmap("warning.png"))
+        msgBox.setWindowIcon(self.style().standardIcon(QStyle.SP_FileDialogStart))
+        msgBox.setIcon(QMessageBox.Warning)
+        msgBox.setDetailedText('Для корректной работы программы необходимо заполнить все поля, после чего нажать на кнопку "Выполнить обработку"')
         msgBox.setText(message)
         msgBox.setStandardButtons(QMessageBox.Ok)
         msgBox.exec_()
